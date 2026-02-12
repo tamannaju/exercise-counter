@@ -2,8 +2,10 @@
 
 class BaseCounter:
     def __init__(self, up_threshold, down_threshold):
+        #super().__init__(up_threshold=150, down_threshold=90)
+        self.stage = "up"
         self.count = 0
-        self.stage = None  # "up" or "down"
+        #self.stage = None  # "up" or "down"
         self.up_threshold = up_threshold
         self.down_threshold = down_threshold
 
@@ -30,4 +32,4 @@ class SquatCounter(BaseCounter):
 class PushupCounter(BaseCounter):
     def __init__(self):
         # Pushup elbow angle thresholds
-        super().__init__(up_threshold=160, down_threshold=90)
+        super().__init__(up_threshold=150, down_threshold=100)
