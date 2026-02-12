@@ -1,25 +1,59 @@
-class SquatCounter:
-    def __init__(self, down_thresh=90, up_thresh=160):
-        self.down_thresh = down_thresh
-        self.up_thresh = up_thresh
 
+
+class BaseCounter:
+    def __init__(self, up_threshold, down_threshold):
+        #super().__init__(up_threshold=150, down_threshold=90)
+        self.stage = "up"
         self.count = 0
-        self.state = "UP"
+        #self.stage = None  # "up" or "down"
+        self.up_threshold = up_threshold
+        self.down_threshold = down_threshold
 
-    def update(self, knee_angle):
-        """
-        Updates count based on knee angle.
-        Returns current count and state.
-        """
+    def update(self, angle):
+        if angle is None:
+            return
 
-        if knee_angle is None:
-            return self.count, self.state
+        # Fully extended position
+        if angle > self.up_threshold:
+            self.stage = "up"
 
-        if knee_angle < self.down_thresh and self.state == "UP":
-            self.state = "DOWN"
-
-        elif knee_angle > self.up_thresh and self.state == "DOWN":
+        # Bent position
+        if angle < self.down_threshold and self.stage == "up":
+            self.stage = "down"
             self.count += 1
-            self.state = "UP"
 
-        return self.count, self.state
+
+class SquatCounter(BaseCounter):
+    def __init__(self):
+        # Squat knee angle thresholds
+        super().__init__(up_threshold=160, down_threshold=90)
+
+
+class PushupCounter(BaseCounter):
+    def __init__(self):
+        # Pushup elbow angle thresholds
+        super().__init__(up_threshold=150, down_threshold=100)
+
+class PullupCounter(BaseCounter):
+    def __init__(self):
+        # Pushup elbow angle thresholds
+        super().__init__(up_threshold=150, down_threshold=70)
+
+class CrunchCounter(BaseCounter):
+    def __init__(self):
+        super().__init__(up_threshold=120, down_threshold=60)
+        self.stage = "down"
+
+    def update(self, angle):
+        if angle is None:
+            return
+
+        # Down position (lying flat)
+        if angle > self.up_threshold:
+            self.stage = "down"
+
+        # Crunch position
+        if angle < self.down_threshold and self.stage == "down":
+            self.stage = "up"
+            self.count += 1
+
