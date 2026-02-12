@@ -38,3 +38,22 @@ class PullupCounter(BaseCounter):
     def __init__(self):
         # Pushup elbow angle thresholds
         super().__init__(up_threshold=150, down_threshold=70)
+
+class CrunchCounter(BaseCounter):
+    def __init__(self):
+        super().__init__(up_threshold=120, down_threshold=60)
+        self.stage = "down"
+
+    def update(self, angle):
+        if angle is None:
+            return
+
+        # Down position (lying flat)
+        if angle > self.up_threshold:
+            self.stage = "down"
+
+        # Crunch position
+        if angle < self.down_threshold and self.stage == "down":
+            self.stage = "up"
+            self.count += 1
+
