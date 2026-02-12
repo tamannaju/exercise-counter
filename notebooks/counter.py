@@ -33,3 +33,8 @@ class PushupCounter(BaseCounter):
     def __init__(self):
         # Pushup elbow angle thresholds
         super().__init__(up_threshold=150, down_threshold=100)
+
+class PullupCounter(BaseCounter):
+    def __init__(self):
+        # Pushup elbow angle thresholds
+        super().__init__(up_threshold=150, down_threshold=70)
