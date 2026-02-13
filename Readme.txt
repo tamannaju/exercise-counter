@@ -32,13 +32,26 @@ exercise-counter/
 
 ## Requirements
 
-- Python 3.10
+- Python 3.10 
 - OpenCV
 - MediaPipe
 - NumPy
 - Pandas
 - Matplotlib
 - pose_landmark
+
+⚠️ If you are using Python 3.11 or newer, install Python 3.10 and create a virtual environment with it.
+
+## Installation
+
+1. Install Python 3.10
+
+2. Create virtual environment and activate it:
+   py -3.10 -m venv .venv
+   
+
+3. Install dependencies:
+   pip install -r requirements.txt
 
 ## Methodology
 
