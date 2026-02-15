@@ -69,7 +69,7 @@ def video_feed(exercise_type):
     )
 
 
-@app.route("/stop_feed")
+@app.route("/stop_feed", methods=["GET", "POST"])
 def stop_feed():
     """Stop the live webcam stream and release resources."""
     live_processor.stop()

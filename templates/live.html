@@ -233,7 +233,17 @@
         // Clean up on page unload
         window.addEventListener('beforeunload', function() {
             if (isStreaming) {
-                fetch('/stop_feed');
+                // Use sendBeacon for more reliable cleanup during navigation
+                navigator.sendBeacon('/stop_feed');
+            }
+        });
+
+        // Also clean up on visibility change (tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isStreaming) {
+                // Page is hidden, optionally stop the feed
+                // Uncomment the next line if you want to stop on tab switch
+                // stopFeed();
             }
         });
     </script>
