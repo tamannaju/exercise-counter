@@ -150,20 +150,41 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .venv\Scripts\Activate.ps1
 ```
 
-### Issue 5: Installation hangs on mediapipe
+### Issue 5: MediaPipe version not found
+
+**Problem:** Error like "Could not find a version that satisfies the requirement mediapipe==0.10.21"
+
+**Cause:** Specific MediaPipe versions may not be available on Windows or other platforms.
+
+**Solution:**
+The requirements.txt now uses a flexible version (>=0.10.9) for cross-platform compatibility:
+```cmd
+pip install -r requirements.txt
+```
+
+If you still encounter issues:
+```cmd
+# Install latest available version
+pip install mediapipe
+
+# Or install with verbose output to see what's available
+pip install -v mediapipe
+```
+
+### Issue 6: Installation hangs on mediapipe
 
 **Problem:** Large package download or network issues.
 
 **Solution:**
 ```cmd
 # Try installing with verbose output
-pip install -v mediapipe==0.10.21
+pip install -v mediapipe
 
-# Or try without version constraint
-pip install mediapipe
+# Or specify timeout
+pip install --timeout 300 mediapipe
 ```
 
-### Issue 6: ImportError after installation
+### Issue 7: ImportError after installation
 
 **Problem:** Wrong Python version or environment.
 

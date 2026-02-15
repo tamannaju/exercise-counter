@@ -78,6 +78,11 @@ See the detailed guides:
 
 ## Common Fixes
 
+**"Could not find a version that satisfies the requirement mediapipe==X.X.X"**
+- MediaPipe versions vary by platform
+- Solution: The requirements.txt now uses a flexible version (>=0.10.9)
+- This ensures compatibility across Windows, macOS, and Linux
+
 **"python is not recognized"**
 - Add Python to PATH during installation
 - Or use full path: `C:\Python310\python.exe`

@@ -54,8 +54,10 @@ pip install -r requirements.txt
 This will install:
 - Flask (web framework)
 - OpenCV (video processing)
-- MediaPipe (pose detection)
+- MediaPipe >=0.10.9 (pose detection - flexible version for cross-platform compatibility)
 - NumPy, Pandas, Matplotlib (data processing)
+
+**Note:** MediaPipe version constraint is flexible (>=0.10.9) to ensure compatibility across Windows, macOS, and Linux, as some specific versions may not be available on all platforms.
 
 ### 4. Run the Application
 
@@ -126,6 +128,22 @@ source .venv/bin/activate  # macOS/Linux
 
 # Install dependencies
 pip install -r requirements.txt
+```
+
+### MediaPipe Version Errors
+
+If you see: `ERROR: Could not find a version that satisfies the requirement mediapipe==X.X.X`
+
+**Cause:** Specific MediaPipe versions may not be available on all platforms (Windows/macOS/Linux).
+
+**Solution:** The requirements.txt now uses a flexible version constraint (`mediapipe>=0.10.9`) that works across all platforms. Simply run:
+```bash
+pip install -r requirements.txt
+```
+
+If you still have issues, you can install the latest available version:
+```bash
+pip install mediapipe
 ```
 
 ### Webcam Not Working
