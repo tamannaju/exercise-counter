@@ -1,10 +1,21 @@
 # Quick Start Guide
 
-**Having trouble with import errors? Follow these 3 steps:**
+## ⚠️ STOP! Read This First ⚠️
 
-## The Problem
+**Before running `python app.py`, you MUST install dependencies first!**
 
-If you see this error:
+## Common Errors (All mean: install dependencies!)
+
+If you see ANY of these errors:
+
+**Error 1 - Incomplete traceback:**
+```
+Traceback (most recent call last):
+  File "...\app.py", line 3, in <module>
+```
+*(Error cuts off - this means dependencies aren't installed)*
+
+**Error 2 - ModuleNotFoundError:**
 ```
 Traceback (most recent call last):
   File "...\app.py", line 3, in <module>
@@ -13,7 +24,17 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'flask'
 ```
 
-It means you haven't installed the required dependencies yet.
+**Error 3 - MediaPipe import error:**
+```
+ModuleNotFoundError: No module named 'mediapipe'
+```
+
+**Error 4 - OpenCV import error:**
+```
+ModuleNotFoundError: No module named 'cv2'
+```
+
+**All of these mean:** You haven't installed the required dependencies yet!
 
 ## The Solution (3 Steps)
 
@@ -31,13 +52,29 @@ source .venv/bin/activate
 
 You should see `(.venv)` at the start of your command prompt.
 
-### Step 2: Install Dependencies
+### Step 2: Install Dependencies ⚠️ CRITICAL STEP!
+
+**This step is MANDATORY! The app will not run without it!**
 
 ```cmd
 pip install -r requirements.txt
 ```
 
+Wait for installation to complete (may take 5-10 minutes).
+
+You should see:
+```
+Successfully installed flask-3.x.x opencv-python-4.x.x mediapipe-0.10.x ...
+```
+
 This installs Flask, OpenCV, MediaPipe, and all other required packages.
+
+**Verify installation worked:**
+```cmd
+python -c "import flask, cv2, mediapipe; print('✓ All dependencies installed!')"
+```
+
+If you see "✓ All dependencies installed!", you're ready to proceed!
 
 ### Step 3: Run the App
 
