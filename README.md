@@ -2,13 +2,6 @@
 
 An AI-powered web application that counts exercise repetitions in real-time using computer vision. Supports both video file uploads and live webcam processing.
 
-## 🚨 Having Issues? 🚨
-
-**Getting errors when running the app?** → See [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-
-**First time setup?** → See [QUICKSTART.md](QUICKSTART.md)
-
-**Windows user?** → See [SETUP_WINDOWS.md](SETUP_WINDOWS.md)
 
 ## Features
 
