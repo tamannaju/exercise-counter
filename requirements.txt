@@ -2,7 +2,7 @@
 setuptools
 wheel
 flask>=3.0.0
-opencv-python
+opencv-python-headless
 mediapipe==0.10.21
 numpy
 pandas
