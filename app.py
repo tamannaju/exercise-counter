@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response, jsonify
 import os
 from video_process import process_video
+from live_process import LiveProcessor
 
 app = Flask(__name__)
+
+# Global live processor instance (one per server)
+live_processor = LiveProcessor()
 
 # Folder paths
 UPLOAD_FOLDER = "static/input_videos"
@@ -38,6 +42,45 @@ def index():
         )
 
     return render_template("index.html")
+
+
+@app.route("/live")
+def live():
+    """Render the live webcam page."""
+    return render_template("live.html")
+
+
+@app.route("/video_feed/<exercise_type>")
+def video_feed(exercise_type):
+    """
+    MJPEG stream endpoint for live webcam feed.
+    Starts the webcam and processes frames in real-time.
+    """
+    # Stop any existing stream first
+    live_processor.stop()
+    
+    # Start new stream with the selected exercise type
+    if not live_processor.start(exercise_type):
+        return "Failed to start webcam", 500
+    
+    return Response(
+        live_processor.generate_frames(),
+        mimetype='multipart/x-mixed-replace; boundary=frame'
+    )
+
+
+@app.route("/stop_feed", methods=["GET", "POST"])
+def stop_feed():
+    """Stop the live webcam stream and release resources."""
+    live_processor.stop()
+    return jsonify({"status": "stopped"})
+
+
+@app.route("/get_count")
+def get_count():
+    """Get the current exercise count as JSON."""
+    count = live_processor.get_count()
+    return jsonify({"count": count})
 
 
 if __name__ == "__main__":
