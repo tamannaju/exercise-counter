@@ -4,3 +4,4 @@ mediapipe>=0.10.9
 numpy
 pandas
 matplotlib
+gunicorn==20.1.0
