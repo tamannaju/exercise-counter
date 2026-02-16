@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise Counter - Live Mode</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-link:hover {
+            background-color: #5a6268;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .control-group {
+            margin: 15px 0;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        select {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 25px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #startBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        #startBtn:hover {
+            background-color: #218838;
+        }
+        #stopBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        #stopBtn:hover {
+            background-color: #c82333;
+        }
+        #stopBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #startBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .video-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        #videoFeed {
+            max-width: 100%;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: none;
+        }
+        .count-display {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .count-display h3 {
+            margin: 0;
+            color: #1976d2;
+        }
+        .count-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #0d47a1;
+            margin: 10px 0;
+        }
+        .instructions {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+        }
+        .instructions h4 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Exercise Counter - Live Webcam Mode</h2>
+    
+    <a href="/" class="nav-link">← Back to Video Upload Mode</a>
+
+    <div class="instructions">
+        <h4>Instructions:</h4>
+        <ol>
+            <li>Select an exercise type from the dropdown</li>
+            <li>Click "Start" to begin the live webcam feed</li>
+            <li>Position yourself so your full body is visible</li>
+            <li>Perform your exercises and watch the count increase</li>
+            <li>Click "Stop" when finished</li>
+        </ol>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="exerciseSelect">Select Exercise:</label>
+            <select id="exerciseSelect">
+                <option value="crunch">Crunch</option>
+                <option value="squat">Squat</option>
+                <option value="pushup">Push-up</option>
+                <option value="pullup">Pull-up</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <button id="startBtn" onclick="startFeed()">Start Webcam</button>
+            <button id="stopBtn" onclick="stopFeed()" disabled>Stop Webcam</button>
+        </div>
+    </div>
+
+    <div class="count-display">
+        <h3>Current Count</h3>
+        <div class="count-number" id="countDisplay">0</div>
+    </div>
+
+    <div class="video-container">
+        <img id="videoFeed" alt="Webcam feed will appear here">
+    </div>
+
+    <script>
+        let countInterval = null;
+        let isStreaming = false;
+
+        function startFeed() {
+            const exercise = document.getElementById('exerciseSelect').value;
+            const videoFeed = document.getElementById('videoFeed');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const exerciseSelect = document.getElementById('exerciseSelect');
+            
+            // Update UI
+            videoFeed.src = `/video_feed/${exercise}`;
+            videoFeed.style.display = 'block';
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            exerciseSelect.disabled = true;
+            isStreaming = true;
+            
+            // Reset count display
+            document.getElementById('countDisplay').textContent = '0';
+            
+            // Start polling for count updates
+            countInterval = setInterval(updateCount, 500);
+        }
+
+        function stopFeed() {
+            const videoFeed = document.getElementById('videoFeed');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const exerciseSelect = document.getElementById('exerciseSelect');
+            
+            // Stop the feed
+            fetch('/stop_feed')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Feed stopped:', data);
+                })
+                .catch(error => {
+                    console.error('Error stopping feed:', error);
+                });
+            
+            // Update UI
+            videoFeed.style.display = 'none';
+            videoFeed.src = '';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            exerciseSelect.disabled = false;
+            isStreaming = false;
+            
+            // Stop polling for counts
+            if (countInterval) {
+                clearInterval(countInterval);
+                countInterval = null;
+            }
+        }
+
+        function updateCount() {
+            if (!isStreaming) {
+                return;
+            }
+            
+            fetch('/get_count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('countDisplay').textContent = data.count;
+                })
+                .catch(error => {
+                    console.error('Error getting count:', error);
+                });
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            if (isStreaming) {
+                // Use sendBeacon for more reliable cleanup during navigation
+                navigator.sendBeacon('/stop_feed');
+            }
+        });
+
+        // Also clean up on visibility change (tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isStreaming) {
+                // Page is hidden, optionally stop the feed
+                // Uncomment the next line if you want to stop on tab switch
+                // stopFeed();
+            }
+        });
+    </script>
+
+</body>
+</html>

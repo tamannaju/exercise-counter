@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-link:hover {
+            background-color: #0056b3;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        select, input[type="file"] {
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Exercise Counter - Video Upload Mode</h2>
+    
+    <a href="/live" class="nav-link">Try Live Webcam Mode →</a>
+
+    <!-- IMPORTANT: enctype required for file upload -->
+    <form method="POST" enctype="multipart/form-data">
+        
+        <label>Select Exercise:</label>
+        <select name="exercise" required>
+            <option value="crunch">Crunch</option>
+            <option value="squat">Squat</option>
+            <option value="pushup">Push-up</option>
+            <option value="pullup">Pull-up</option>
+        </select>
+
+        <br><br>
+
+        <label>Upload Video:</label>
+        <input type="file" name="video" accept="video/*" required>
+
+        <br><br>
+
+        <button type="submit">Process</button>
+    </form>
+
+    <hr>
+
+    {% if result is defined %}
+        <h3>Final Count: {{ result }}</h3>
+
+        {% if output_video is defined %}
+            <h3>Processed Video:</h3>
+            <video width="600" controls>
+                <source src="{{ url_for('static', filename='output_videos/' + output_video) }}">
+                Your browser does not support the video tag.
+            </video>
+        {% endif %}
+    {% endif %}
+
+</body>
+</html>

@@ -1,12 +1,12 @@
 #Exercise Counter
-This project detects human poses in videos using MediaPipe and counts squat,push_up, pull_up repetitions based on knee and enbow joint angles.
+This project detects human poses in videos using MediaPipe and counts squat,push_up, pull_up, crunch repetitions based on knee and enbow joint angles.
 It outputs an annotated video, a CSV file with frame-wise angles and repetition counts, and a plot of knee/elbow angle over time.
 
 ## Features
 
 - Pose detection using MediaPipe
-- Automatic squat/push_up/pull_up repetition counting
-- Knee/elbow angle calculation
+- Automatic squat/push_up/pull_up, crunch repetition counting
+- Knee/elbow/hip angle calculation
 - Annotated output video with landmarks and rep count
 - CSV export of angles and cumulative reps
 - Angle-vs-frame plot visualization
@@ -32,26 +32,13 @@ exercise-counter/
 
 ## Requirements
 
-- Python 3.10 
+- Python 3.10
 - OpenCV
 - MediaPipe
 - NumPy
 - Pandas
 - Matplotlib
 - pose_landmark
-
-⚠️ If you are using Python 3.11 or newer, install Python 3.10 and create a virtual environment with it.
-
-## Installation
-
-1. Install Python 3.10
-
-2. Create virtual environment and activate it:
-   py -3.10 -m venv .venv
-   
-
-3. Install dependencies:
-   pip install -r requirements.txt
 
 ## Methodology
 
