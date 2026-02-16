@@ -3,7 +3,7 @@ setuptools
 wheel
 flask>=3.0.0
 opencv-python
-mediapipe>=0.10.9
+mediapipe==0.10.21
 numpy
 pandas
 matplotlib
