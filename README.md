@@ -5,7 +5,7 @@ An AI-powered web application that counts exercise repetitions in real-time usin
 
 ## Features
 
-- 🎥 **Video Upload Mode**: Upload exercise videos and get annotated results
+- 🎥 **Video Upload Mode**: Upload exercise videos (Maximum size of 10 MB) and get annotated results
 - 📹 **Live Webcam Mode**: Real-time exercise counting using your webcam
 - 🏋️ **Multiple Exercise Types**: Squat, Push-up, Pull-up, and Crunch detection
 - 🤖 **AI-Powered**: Uses MediaPipe Pose for accurate body landmark detection

@@ -9,7 +9,7 @@ from live_process import LiveProcessor
 app = Flask(__name__)
 
 # ========= Upload limits =========
-MAX_MB = 5
+MAX_MB = 10  # Maximum file size in megabytes
 app.config["MAX_CONTENT_LENGTH"] = MAX_MB * 1024 * 1024  # bytes
 
 ALLOWED_EXTENSIONS = {"mp4", "mov", "avi", "mkv"}
