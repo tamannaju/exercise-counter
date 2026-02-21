@@ -1,85 +1,101 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Exercise Counter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        .nav-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .nav-link:hover {
-            background-color: #0056b3;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        select, input[type="file"] {
-            padding: 8px;
-            margin: 5px 0;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h2>Exercise Counter - Video Upload Mode</h2>
-    
-    <a href="/live" class="nav-link">Try Live Webcam Mode →</a>
+{% block title %}Exercise Counter{% endblock %}
+{% block header_subtitle %}Upload a video or switch to Live Webcam mode{% endblock %}
 
-    <!-- IMPORTANT: enctype required for file upload -->
-    <form method="POST" enctype="multipart/form-data">
-        
-        <label>Select Exercise:</label>
-        <select name="exercise" required>
-            <option value="crunch">Crunch</option>
-            <option value="squat">Squat</option>
-            <option value="pushup">Push-up</option>
-            <option value="pullup">Pull-up</option>
+{% block header_actions %}
+  <a class="btn btn-primary" href="/live">Try Live Webcam Mode →</a>
+{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <h2 class="hero-title">Video Upload Mode</h2>
+    <p class="hero-sub">
+      Select an exercise, upload a short video, and get the final rep count with a processed preview.
+      For best results: keep the full body visible and use good lighting.
+    </p>
+  </section>
+
+  <section class="grid">
+    <!-- Upload Card -->
+    <div class="card">
+      <h2>Upload & Process</h2>
+      <p class="muted" style="margin-top:0;">Supported formats: mp4, mov, avi, mkv</p>
+
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+
+      <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <label for="exercise">Select Exercise</label>
+        <select id="exercise" name="exercise" required>
+          <option value="crunch">Crunch</option>
+          <option value="squat">Squat</option>
+          <option value="pushup">Push-up</option>
+          <option value="pullup">Pull-up</option>
         </select>
 
-        <br><br>
+        <label for="video">Upload Video</label>
+        <input id="video" type="file" name="video" accept="video/*" required />
 
-        <label>Upload Video:</label>
-        <input type="file" name="video" accept="video/*" required>
+        <div class="hint" id="limitHint">
+          Max file size: <strong>{{ max_mb|default(50) }} MB</strong> (client-side check) — server enforces the same limit.
+        </div>
 
-        <br><br>
+        <div id="clientAlert" class="alert alert-warn" style="display:none;"></div>
 
-        <button type="submit">Process</button>
-    </form>
+        <div class="row">
+          <button id="submitBtn" class="btn-submit" type="submit">Process Video</button>
+          <span class="mini" id="fileInfo"></span>
+        </div>
+      </form>
+    </div>
 
-    <hr>
+    <!-- Results Card -->
+    <div class="card">
+      <h2>Results</h2>
+      <p class="muted" style="margin-top:0;">Your processed output and final count will appear here.</p>
 
-    {% if result is defined %}
-        <h3>Final Count: {{ result }}</h3>
+      {% if result is defined %}
+        <div class="alert alert-good">Processing completed successfully.</div>
+
+        <div class="kpi">
+          <div>
+            <div class="lbl">Final Count</div>
+            <div class="num">{{ result }}</div>
+          </div>
+          <div class="mini">Tip: Try a shorter clip for faster processing</div>
+        </div>
 
         {% if output_video is defined %}
-            <h3>Processed Video:</h3>
-            <video width="600" controls>
-                <source src="{{ url_for('static', filename='output_videos/' + output_video) }}">
-                Your browser does not support the video tag.
-            </video>
+          <video controls>
+            <source src="{{ url_for('static', filename='output_videos/' + output_video) }}">
+            Your browser does not support the video tag.
+          </video>
         {% endif %}
-    {% endif %}
+      {% else %}
+        <div class="alert">No results yet. Upload a video to get started.</div>
+      {% endif %}
+    </div>
+  </section>
 
-</body>
-</html>
+  <!-- Loader Overlay -->
+  <div class="loader-overlay" id="loaderOverlay" aria-hidden="true">
+    <div class="loader-card">
+      <div class="spinner"></div>
+      <h3 class="loader-title">Processing your video…</h3>
+      <p class="loader-sub">
+        Please don’t close this tab. This can take a little time depending on video length and device speed.
+      </p>
+      <p class="mini">Tip: shorter videos process faster.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    // Pass max size from backend to JS
+    window.MAX_UPLOAD_MB = {{ max_mb|default(50) }};
+  </script>
+  <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Exercise Counter{% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Exercise Counter</h1>
+          <p>{% block header_subtitle %}Upload a video or switch to Live Webcam mode{% endblock %}</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        {% block header_actions %}{% endblock %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>© {{ 2026 }} Exercise Counter • Image Processing • TEAM E</div>
+      <div>{% block footer_tip %}Tips: keep camera stable • good lighting • full body in frame{% endblock %}</div>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
