@@ -28,7 +28,7 @@
 
       <form id="uploadForm" method="POST" enctype="multipart/form-data">
         <label for="exercise">Select Exercise</label>
-        <select id="exercise" name="exercise" required>
+        <select id="exercise" name="exercise" required style="background-color: #6d5efc;">
           <option value="crunch">Crunch</option>
           <option value="squat">Squat</option>
           <option value="pushup">Push-up</option>
@@ -39,7 +39,7 @@
         <input id="video" type="file" name="video" accept="video/*" required />
 
         <div class="hint" id="limitHint">
-          Max file size: <strong>{{ max_mb|default(50) }} MB</strong> (client-side check) — server enforces the same limit.
+          Max file size: <strong>{{ max_mb|default(10) }} MB</strong> 
         </div>
 
         <div id="clientAlert" class="alert alert-warn" style="display:none;"></div>
